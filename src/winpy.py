@@ -42,7 +42,8 @@ mouse.on_double_click(lambda: mouseDoubleClick(1))
 running = True
 
 # handle kill
-def exit_graceful():
+def exit_graceful(*args):
+    global running
     keyboard.unhook_all()
     mouse.unhook_all()
     running=False
@@ -51,4 +52,4 @@ signal.signal(signal.SIGINT, exit_graceful)
 signal.signal(signal.SIGTERM, exit_graceful)
 
 while running:
-    sleep(1)
+    time.sleep(1)

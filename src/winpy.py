@@ -2,6 +2,8 @@ import mouse
 import keyboard
 import sys
 from threading import Lock, Thread
+import time
+import signal
 
 print_lock = Lock()
 
@@ -37,13 +39,16 @@ mouse.on_right_click(lambda: mousePress(2))
 mouse.on_middle_click(lambda: mousePress(3))
 mouse.on_double_click(lambda: mouseDoubleClick(1))
 
+running = True
 
+# handle kill
+def exit_graceful():
+    keyboard.unhook_all()
+    mouse.unhook_all()
+    running=False
+    
+signal.signal(signal.SIGINT, exit_graceful)
+signal.signal(signal.SIGTERM, exit_graceful)
 
-def mouse_poll_loop():
-    while True:
-        mouse.wait()
-
-mouse_thread = Thread(target=mouse_poll_loop, args=())
-mouse_thread.start()
-keyboard.wait()
-
+while running:
+    sleep(1)
